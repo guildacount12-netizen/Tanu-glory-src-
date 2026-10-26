@@ -127,7 +127,7 @@ class BotState:
 
     def register_account(self, uid: str, nickname: str, region: str, level: int, exp: int,
                          likes: int = 0, token: Optional[str] = None, auth_uid: Optional[str] = None,
-                         clan_id: Optional[str] = None): # <--- Clan ID যোগ করা হলো
+                         clan_id: Optional[str] = None):
         uid_str = str(uid)
         auth_uid_str = str(auth_uid) if auth_uid else self.game_to_auth_id.get(uid_str, "")
         if auth_uid_str:
@@ -767,4 +767,11 @@ async def start_web_dashboard(host: str = "0.0.0.0", port: int = 5000):
     site = web.TCPSite(runner, host, port)
     await site.start()
     print(f"[WEB] Server running on http://{host}:{port}")
-    return runner
+    
+    # Keep the server running indefinitely
+    while True:
+        await asyncio.sleep(3600)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    asyncio.run(start_web_dashboard(host="0.0.0.0", port=port))
